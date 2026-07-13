@@ -8,9 +8,8 @@ class Attachment(Base):
 
     id=Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     claim_id=Column(UUID(as_uuid=True), ForeignKey("claims.id"), nullable=True)
-    file_name=Column(String, nullable=False)
-    file_path=Column(String, nullable=False)
+    file_url=Column(String, nullable=False)
     uploaded_by=Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
-    uploaded_at = Column(DateTime(timezone=True), server_default=func.now())
+    uploaded_at=Column(DateTime(timezone=True), server_default=func.now())
 
     

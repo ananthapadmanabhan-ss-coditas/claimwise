@@ -9,3 +9,12 @@ class ClaimStatus(str, Enum):
     APPROVED="APPROVED"
     DENIED="DENIED"
 
+class ClaimCategory(str, Enum):
+    AUTO="AUTO"
+    HOME="HOME"
+    TRAVEL="TRAVEL"
+
+class SortByCategory(str, Enum):
+    ASCENDING="ASCENDING"
+    DESCENDING="DESCENDING"
+
