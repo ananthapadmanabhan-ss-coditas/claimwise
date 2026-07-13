@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Ephesis&family=Oswald:wght@200..700&family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&family=Playwrite+NO:wght@100..400&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+$font-family-primary: "Inter", sans-serif;
+$font-family-secondary: "Poppins", sans-serif;
+$font-family-mono: "Fira Code", monospace;
+
+@mixin oswald{
+  font-family: "Oswald", sans-serif;
+}

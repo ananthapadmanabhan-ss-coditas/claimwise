@@ -1,0 +1,7 @@
+@use "./functions" as *;
+
+$shadow-header: 0 rem(1px) rem(3px) rgba(0,0,0,0.08);
+$shadow-hard:0 rem(2px) rem(8px) rgba(0,0,0,0.08);
+$shadow-soft:0 rem(1px) rem(3px) rgba(0,0,0,0.5);
+$shadow-hover:0 rem(8px) rem(24px) rgba(0,0,0,0.12);
+
