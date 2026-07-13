@@ -1,0 +1,55 @@
+@use "./variables" as *;
+@use "./functions" as *;
+
+@mixin flex-center
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin flex-between
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@mixin grid-center
+{
+  display: grid;
+  place-items: center;
+}
+
+@mixin formCommon
+{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+@mixin shiftinput{
+  padding: 0.25rem 1.25rem 0.25rem 0.25rem;
+  background-color: $input-border;
+  border-radius: 10px;
+  width: 100%;
+  color: $input-placeholder;
+}
+
+@mixin ShiftInputAndLabel {
+  position: absolute;
+  left: rem(10px);
+  top: rem(-10px);
+  font-size: rem(12px);
+  background-color: $input-bg;
+  padding-left: rem(10px);
+  padding-right: rem(10px);
+  transition: opacity 0.2s ease;
+}
+
+@mixin PlaceholderFocus{
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
