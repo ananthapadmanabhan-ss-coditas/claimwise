@@ -11,6 +11,10 @@ export const routes=createBrowserRouter(
       Component:Login
     },
     {
+      path:"unauthorized",
+      
+    },
+    {
       Component:RouteGuard,
       children:
       [
