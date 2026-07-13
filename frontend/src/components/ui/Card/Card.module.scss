@@ -1,0 +1,24 @@
+@use "../../../styles/variables" as *;
+@use "../../../styles/shadow" as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: $card-bg;
+  border: 1px solid text-secondary;
+  box-shadow: $shadow-hard;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+// .clickable {
+//   cursor: pointer;
+
+//   &:hover {
+//     transform: translateY(-4px);
+//     box-shadow: $shadow-hover;
+//   }
+// }

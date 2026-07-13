@@ -1,0 +1,16 @@
+@use "../../styles/mixin" as *;
+.authLayout {
+    min-height: 100vh;
+    width: 100%;
+    @include flex-center;
+    background-image:linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),url("../../assets/undraw_deliveries_qutl.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.authContainer {
+    width: 100%;
+    max-width: 450px;
+    @include flex-center;
+}

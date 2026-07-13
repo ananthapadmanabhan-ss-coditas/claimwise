@@ -1,0 +1,30 @@
+@use  "../../../../styles/shadow" as *;
+@use "../../../../styles/variables" as *;
+.authForm {
+    width: min(440px, 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.header {
+    text-align: center;
+    color: black;
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+.body {
+    padding: 2rem;
+    border-radius: 1.25rem;
+    background: $hover-bg;
+    // backdrop-filter: blur(20px);
+    box-shadow: $shadow-hard;
+}
+
+
+.footer {
+    padding-top: 1.5rem;
+    text-align: center;
+}

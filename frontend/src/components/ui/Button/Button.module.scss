@@ -1,0 +1,62 @@
+@use "../../../styles/shadow" as *;
+@use "../../../styles/variables" as *;
+
+.button {
+  background-color: var(--background-color, $info-bg);
+  color: var(--color, $accent-color);
+  border-radius: 0.5rem;
+  box-shadow: $shadow-soft;
+  padding: 0.25rem 1.25rem;
+  border: thin solid;
+  cursor: pointer;
+  transition: 
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s ease;
+  &:hover {
+    box-shadow: $shadow-hover;
+    background-color: var(--color, $accent-color);
+    color: var(--background-color,  $info-bg);
+  }
+  &:disabled {
+    cursor: not-allowed;
+    background-color: $button-disabled;
+    color: $button-disabled-text;
+  }
+}
+
+.primary{
+  color: $warning-color;
+  background-color: $warning-bg;
+  &:hover{
+    background-color:$warning-color;
+    color: $warning-bg;
+  }
+}
+
+.error{
+  color: $error-color;
+  background-color: $error-bg;
+  &:hover{
+    background-color: $error-color;
+    color: $error-bg;
+  }
+}
+
+.success{
+  color:$success-color;
+  background-color: $success-bg;
+  &:hover{
+    background-color: $success-color;
+    color: $success-bg;
+  }
+}
+
+.info{
+  color:$info-color;
+  background-color: $info-bg;
+  &:hover{
+    background-color: $info-color;
+    color: $info-bg;
+  }
+}

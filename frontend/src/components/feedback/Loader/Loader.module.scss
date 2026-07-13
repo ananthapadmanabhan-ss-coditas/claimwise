@@ -1,0 +1,23 @@
+@use "../../../styles/variables" as *;
+
+.Loader{
+  border-radius: 50%;
+  height: 48px;
+  width: 48px;
+  border: 5px solid $text-light;
+  border-bottom-color: $text-primary;
+  position: absolute;
+  left: 48%;
+  top: 45%;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation{
+  0%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
