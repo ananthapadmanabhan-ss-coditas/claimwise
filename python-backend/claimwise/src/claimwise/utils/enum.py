@@ -13,6 +13,7 @@ class ClaimCategory(str, Enum):
     AUTO="AUTO"
     HOME="HOME"
     TRAVEL="TRAVEL"
+    ACCIDENT="ACCIDENT"
 
 class SortByCategory(str, Enum):
     ASCENDING="ASCENDING"

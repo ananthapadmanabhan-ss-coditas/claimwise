@@ -4,6 +4,7 @@ import uuid
 from src.claimwise.utils.s3 import s3_client
 from src.claimwise.config.settings import settings
 from src.claimwise.utils.logger import logger
+from src.claimwise.utils.exceptions import ClaimNotFoundException
 
 class ClaimService:
     
@@ -11,31 +12,14 @@ class ClaimService:
         self.claim_repository=ClaimRepository()
         self.attachment_repository=AttachmentRepository()
 
-    def create_claim_service(self, category, description, date, estimated_cost, file, db):
+    def create_claim_service(self, category, description, date, estimated_cost, db):
         logger.info(f"Creating claim")
 
-        new_claim=self.claim_repository.create_claim_repository(
+        self.claim_repository.create_claim_repository(
             category,
             description,
             date,
             estimated_cost,
-            db
-        )
-
-        file_name = f"{uuid.uuid4}_{file.filename}"
-
-        s3_client.upload_fileobj(
-            file.file,
-            settings.S3_BUCKET_NAME,
-            file_name,
-            ExtraArgs={"ContentType": file.content_type},
-        )
-
-        file_url = f"https://{settings.S3_BUCKET_NAME}.s3.amazonaws.com/claimwise_documents/{file_name}"
-
-        self.attachment_repository.create_attachment_repository(
-            new_claim.id,
-            file_url,
             db
         )
 
@@ -45,9 +29,52 @@ class ClaimService:
             "message": "Claim created successfully",
         }
     
+    def upload_attachment_service(self, claim_id, file, db):
+        logger.info(f"Uploading attachment for claim: {claim_id}")
+        db_claim=self.claim_repository.get_claim_by_id_repository(claim_id, db)
+
+        if not db_claim:
+            raise ClaimNotFoundException("Claim not found")
+        
+        uploaded_file_name = f"{uuid.uuid4()}_{file.filename}"
+        original_file_name=file.filename
+        file_type=file.content_type.split("/")[1]
+        
+        s3_client.upload_fileobj(
+            file.file,
+            settings.S3_BUCKET_NAME,
+            uploaded_file_name,
+            ExtraArgs={"ContentType": file.content_type},
+        )
+
+        file_url = f"https://{settings.S3_BUCKET_NAME}.s3.amazonaws.com/claimwise_documents/{uploaded_file_name}"
+
+        self.attachment_repository.create_attachment_repository(
+            claim_id,
+            file_url,
+            original_file_name,
+            file_type, db
+        )
+
+        logger.info("Attachment uploaded successfully")
+
+        return {
+            "message": "Attachment uploaded successfully"
+        }
+    
     def get_all_claims_service(self, category, status, sort_by_date, db):
         return self.claim_repository.get_all_claims_repository(self, category, status, sort_by_date, db)
+    
+    def get_claim_details_service(self, claim_id, db):
+        logger.info(f"Fetching details for claim: {claim_id}")
+        db_claim=self.claim_repository.get_claim_by_id_repository(claim_id, db)
 
+        if not db_claim:
+            raise ClaimNotFoundException("Claim not found")
+        
+        logger.info("Claim successfully fetched")
+        return db_claim
+        
 claim_service=ClaimService()
         
 

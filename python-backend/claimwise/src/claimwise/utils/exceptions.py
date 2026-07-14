@@ -1,0 +1,2 @@
+class ClaimNotFoundException(Exception):
+    pass

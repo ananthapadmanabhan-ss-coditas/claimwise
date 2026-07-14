@@ -1,5 +1,6 @@
 from src.claimwise.models.claim import Claim
 from src.claimwise.utils.enum import SortByCategory
+from sqlalchemy.orm import joinedload
 
 class ClaimRepository:
 
@@ -13,8 +14,9 @@ class ClaimRepository:
 
         db.add(new_claim)
         db.commit()
-        db.refresh(new_claim)
-        return new_claim
+    
+    def get_claim_by_id_repository(self, claim_id, db):
+        return db.query(Claim).filter(Claim.id==claim_id).options(joinedload(Claim.attachments)).first()
     
     def get_all_claims_repository(self, category, status, sort_by_date, db):
         query = db.query(Claim)

@@ -4,6 +4,9 @@ from src.claimwise.db.session import get_db
 from src.claimwise.utils.enum import ClaimCategory, ClaimStatus, SortByCategory
 from datetime import date
 from src.claimwise.features.claims.service.claim import claim_service
+from uuid import UUID
+from src.claimwise.utils.exceptions import ClaimNotFoundException
+
 
 router=APIRouter(tags=["Claims"])
 
@@ -13,7 +16,6 @@ def file_claim(
     description: str=Form(...),
     date: date = Form(...),
     estimated_cost: float = Form(...),
-    file: UploadFile=File(...),
     db: Session=Depends(get_db)
 ):
     try:
@@ -22,11 +24,33 @@ def file_claim(
             description,
             date,
             estimated_cost,
-            file,
             db
         )
     except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+    
+@router.post("/claims/{claim_id}/attachment")
+def upload_attachment(
+    claim_id: UUID,
+    file: UploadFile=File(...),
+    db: Session=Depends(get_db)
+):
+    try:
+        return claim_service.upload_attachment_service(claim_id, file, db)
+    except ClaimNotFoundException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+
+@router.get("/claims/{claim_id}")
+def get_claim_details(claim_id: UUID, db: Session=Depends(get_db)):
+    try:
+        return claim_service.get_claim_details_service(claim_id, db)
+    except ClaimNotFoundException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+    
     
 @router.get("/claims")
 def view_all_claims(
@@ -34,4 +58,8 @@ def view_all_claims(
     status: ClaimStatus|None=None,
     sort_by_date: SortByCategory|None=None,
     db: Session=Depends(get_db)):
-    return claim_service.get_all_claims_service(category, status, sort_by_date, db)
+    try:
+        return claim_service.get_all_claims_service(category, status, sort_by_date, db)
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+    
