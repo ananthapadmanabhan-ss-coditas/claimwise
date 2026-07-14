@@ -11,6 +11,7 @@ class Claim(Base, TimeStampMixin):
 
     id=Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id=Column(UUID(as_uuid=True))
+    title=Column(String)
     category=Column(String)
     description=Column(Text)
     date=Column(Date)

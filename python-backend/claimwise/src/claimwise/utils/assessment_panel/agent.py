@@ -1,14 +1,16 @@
 from typing import TypedDict
 from langgraph.graph import StateGraph, START, END
-# from src.claimwise.utils.logger import logger
+from src.claimwise.utils.logger import logger
 from groq import Groq
 import json
 from src.claimwise.features.claims.repository.claim import ClaimRepository
+from src.claimwise.features.claims.repository.assessment_result import AssessmentResultRepository
 from sqlalchemy.orm import Session
 from src.claimwise.db.session import engine
 
 client=Groq()
 claim_repository=ClaimRepository()
+assessment_result_repository=AssessmentResultRepository()
 
 class State(TypedDict):
     claim: dict
@@ -20,11 +22,11 @@ class State(TypedDict):
     final_assessment_result: dict
 
 def load_claim_node(state: State):
-    # logger.info("Loading claim")
+    logger.info("Loading claim")
     return state
 
 def summary_agent_node(state: State):
-    # logger.info("Summary agent node is processing the claim")
+    logger.info("Summary agent node is processing the claim")
 
     claim=state["claim"]
 
@@ -61,7 +63,7 @@ def summary_agent_node(state: State):
     }
 
 def completeness_agent_node(state: State):
-    # logger.info("Completeness agent is processing the claim")
+    logger.info("Completeness agent is processing the claim")
     claim=state["claim"]
     attachments=state["attachments"]
 
@@ -105,6 +107,7 @@ def completeness_agent_node(state: State):
     }
 
 def cost_agent_node(state: State):
+    logger.info("Cost agent is processing the claim")
     with Session(engine) as db:
         past_claims=claim_repository.get_claims_by_category_repository(state["claim"]["category"], db)
 
@@ -160,6 +163,7 @@ def cost_agent_node(state: State):
     }
 
 def consistency_agent_node(state: State):
+    logger.info("Consistency agent is processing the claim")
     claim=state["claim"]
 
     response=client.chat.completions.create(
@@ -198,9 +202,31 @@ def consistency_agent_node(state: State):
     }
 
 def final_summarizer_agent_node(state: State):
+    logger.info("Final summarizer agent is processing the claim")
     response=client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         messages=[
+            {
+                "role": "system",
+                "content": """
+                ##ROLE
+                You are an insurance claim summarizer.
+
+                ##TASK
+                Produce one clear, consolidated assessment: a short summary of the claim, anything missing or inconsistent, 
+                and an overall suggestion of whether it looks straightforward to approve, needs more information, or needs closer manual scrutiny — always presented as a suggestion, not a final decision.
+                Only use the provided data for the same.
+
+                ##OUTPUT FORMAT
+                - missing_fields: [<list of missing fields from the Completeness section and more information required if any>]
+                - suggested_decision: <APPROVED/DENIED/REQUEST FOR MORE INFORMATION>
+                - explaination: <explaination/reason of the decision>
+
+                ##RULES
+                - Strictly return a JSON object
+                - No code fences, markdown or explanations/preamble, return just a json object.
+                """
+            },
             {
                 "role": "user",
                 "content": f"""
@@ -215,20 +241,19 @@ def final_summarizer_agent_node(state: State):
 
                 Consistency
                 {state["consistency_result"]}
-
-                Produces one clear, consolidated assessment: a short summary of the claim, anything missing or inconsistent, 
-                and an overall suggestion of whether it looks straightforward to approve, needs more information, or needs closer manual scrutiny — always presented as a suggestion for the Adjuster to confirm, not a final decision.
-
-                ##OUTPUT FORMAT
-                Return response as plain string
                 """
             }
         ]
     )
 
     return {
-        "final_assessment_result": response.choices[0].message.content
+        "final_assessment_result": json.loads(response.choices[0].message.content)
     }
+
+def save_assessment_result_node(state: State):
+    logger.info("Saving assessment result")
+
+    assessment_result_repository.create_assessment_result()
 
 
 builder=StateGraph(State)

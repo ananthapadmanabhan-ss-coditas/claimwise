@@ -4,9 +4,10 @@ from sqlalchemy.orm import joinedload
 
 class ClaimRepository:
 
-    def create_claim_repository(self, category, description, date, estimated_cost, db):
+    def create_claim_repository(self, category, title, description, date, estimated_cost, db):
         new_claim=Claim(
             category=category,
+            title=title,
             description=description,
             date=date,
             estimated_cost=estimated_cost
@@ -37,4 +38,10 @@ class ClaimRepository:
     
     def get_claims_by_category_repository(self, category, db):
         return db.query(Claim).filter(Claim.category==category, Claim.status==ClaimStatus.APPROVED).all()
+    
+    def update_claim_status_repository(self, claim_id, status, db):
+        db_claim=db.query(Claim).filter(Claim.id==claim_id).first()
+
+        db_claim.status=status
+        db.commit()
         

@@ -6,6 +6,7 @@ from src.claimwise.config.settings import settings
 from src.claimwise.utils.logger import logger
 from src.claimwise.utils.exceptions import ClaimNotFoundException
 from src.claimwise.utils.assessment_panel.agent import graph
+from src.claimwise.utils.enum import ClaimStatus
 
 class ClaimService:
     
@@ -13,11 +14,12 @@ class ClaimService:
         self.claim_repository=ClaimRepository()
         self.attachment_repository=AttachmentRepository()
 
-    def create_claim_service(self, category, description, date, estimated_cost, db):
+    def create_claim_service(self, category, title, description, date, estimated_cost, db):
         logger.info(f"Creating claim")
 
         db_claim=self.claim_repository.create_claim_repository(
             category,
+            title,
             description,
             date,
             estimated_cost,
@@ -99,10 +101,9 @@ class ClaimService:
 
         result=graph.invoke(assessment_input)
 
+        self.claim_repository.update_claim_status_repository(claim_id, ClaimStatus.SUBMITTED, db)
         return result
         
-
-
         
 claim_service=ClaimService()
         

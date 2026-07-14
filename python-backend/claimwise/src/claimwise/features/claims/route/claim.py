@@ -13,6 +13,7 @@ router=APIRouter(tags=["Claims"])
 @router.post("/claims")
 def file_claim(
     category: ClaimCategory = Form(...),
+    title: str=Form(...),
     description: str=Form(...),
     date: date = Form(...),
     estimated_cost: float = Form(...),
@@ -21,6 +22,7 @@ def file_claim(
     try:
         return claim_service.create_claim_service(
             category,
+            title,
             description,
             date,
             estimated_cost,
