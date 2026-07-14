@@ -5,7 +5,7 @@ import styles from "./ClaimantLayout.module.scss"
 const ClaimantLayout=()=>{
   const ClaimantSidebarItems=[
     {
-      path:"/claimant/portal",
+      path:"",
       label:"CLAIMENT PORTAL"
     }
   ]

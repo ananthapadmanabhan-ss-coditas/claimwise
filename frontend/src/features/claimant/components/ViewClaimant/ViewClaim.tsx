@@ -1,5 +1,7 @@
 const ViewClaim=()=>{
-  return(<></>)
+  return(<>
+  yoooooooooo
+  </>)
 }
 
 export default ViewClaim

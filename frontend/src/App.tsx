@@ -1,11 +1,14 @@
+import { Provider } from 'react-redux'
 import './App.css'
-import Login from './pages/Login/Login'
+import { store } from './redux/store'
+import { RouterProvider } from 'react-router-dom'
+import { routes } from './routes/routes'
 
 function App() {
   return (
-    <>
-    <Login/>
-    </>
+    <Provider store={store}>
+      <RouterProvider router={routes}></RouterProvider>
+    </Provider>
   )
 }
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
-import Button from "../../../../components/ui/Button/Button";
+
 import styles from "./ClaimantPortal.module.scss";
+import Button from "../../components/ui/Button/Button";
 
 const ClaimantPortal=()=>{
   const [createClaim,setCreateClaim]=useState(false)
@@ -9,7 +10,7 @@ const ClaimantPortal=()=>{
     <section className={styles.container}>
             <div className={styles.header}>
                 <h1>View My Claims</h1>
-                <Button onClick={()=>setCreateClaim(true)}>Make A Claim</Button>
+                <Button onClick={()=>setCreateClaim(true)}>Make A Claim +</Button>
             </div>
 
             <div className={styles.courseGrid}>
