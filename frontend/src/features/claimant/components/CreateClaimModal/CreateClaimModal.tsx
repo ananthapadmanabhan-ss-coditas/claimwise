@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import Modal from "../../../../components/ui/Modal/Modal";
 import Button from "../../../../components/ui/Button/Button";
 import { useForm } from "react-hook-form";
@@ -14,6 +14,8 @@ const CreateClaimModal = ({
 }: {
   setModal: Dispatch<SetStateAction<boolean>>;
 }) => {
+
+  const [btnstates,setBtnStates]=useState<"basic"|"upload"|"final">("basic")
   
   const {register:basicDetails,handleSubmit,formState:{errors}}=useForm()
   const {register:uploadDetails,handleSubmit:UploadHandler,formState:{errors:uploaderrors}}=useForm()
