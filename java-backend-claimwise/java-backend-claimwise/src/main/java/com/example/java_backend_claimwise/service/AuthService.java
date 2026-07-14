@@ -1,6 +1,7 @@
 package com.example.java_backend_claimwise.service;
 
 import com.example.java_backend_claimwise.dto.AuthResponse;
+import com.example.java_backend_claimwise.dto.CreateUserDto;
 import com.example.java_backend_claimwise.dto.RefreshDto;
 import com.example.java_backend_claimwise.entity.OtpToken;
 import com.example.java_backend_claimwise.entity.RefreshToken;
@@ -108,4 +109,33 @@ public class AuthService {
 
         return new AuthResponse(accessToken,refreshToken.getToken(),user.getRole().name());
     }
+
+    public Users createUser(CreateUserDto dto){
+        if (userRepo.findByEmail(dto.getEmail()).isPresent()) {
+            throw new RuntimeException("A user with this email already exists");
+        }
+        Users user = Users.builder()
+                .email(dto.getEmail())
+                .role(dto.getRole())
+                .build();
+
+        userRepo.save(user);
+        sendWelcomeEmail(user);
+        return user;
+    }
+
+    private void sendWelcomeEmail(Users user) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setSubject("Welcome To ClaimWise");
+        mailMessage.setText(
+                "Hi " + user.getName() + ",\n\n" +
+                        "An account has been created for you on ClaimWise as a " + user.getRole().name() + ".\n" +
+                        "To log in, just enter your email at the login page and we'll send you a one-time code — no password needed.\n\n" +
+                        "Welcome aboard."
+        );
+        mailSender.send(mailMessage);
+
+    }
 }
+
