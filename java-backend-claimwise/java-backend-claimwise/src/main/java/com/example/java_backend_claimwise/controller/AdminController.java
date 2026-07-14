@@ -27,26 +27,3 @@ public class AdminController {
 }
 
 
-
-/*
-public class AdminController {
-
-    private final AuthService authService;
-
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<User> createUser(@RequestBody @Valid CreateUserDto dto) {
-        return ApiResponse.success(authService.createUser(dto));
-    }
-}
-
-.authorizeHttpRequests(auth -> auth
-    .requestMatchers("/auth/**").permitAll()
-    .requestMatchers("/ws/**").permitAll()
-    .requestMatchers(HttpMethod.POST, "/notifications").permitAll()
-    .requestMatchers("/adjuster/**").hasRole("ADJUSTER")
-    .requestMatchers("/admin/**").hasRole("ADMIN")
-    .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
-    .anyRequest().authenticated())
-
- */
