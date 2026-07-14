@@ -19,3 +19,8 @@ class SortByCategory(str, Enum):
     ASCENDING="ASCENDING"
     DESCENDING="DESCENDING"
 
+class ClaimAssignmentStatus(str, Enum):
+    ASSIGNED="ASSIGNED"
+    UNASSIGNED="UNASSIGNED"
+    
+

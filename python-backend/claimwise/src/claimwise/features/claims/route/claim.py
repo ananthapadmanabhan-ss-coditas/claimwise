@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Form, File, UploadFile
 from sqlalchemy.orm import Session
 from src.claimwise.db.session import get_db
-from src.claimwise.utils.enum import ClaimCategory, ClaimStatus, SortByCategory
+from src.claimwise.utils.enum import ClaimCategory, ClaimStatus, SortByCategory, ClaimAssignmentStatus
 from datetime import date
 from src.claimwise.features.claims.service.claim import claim_service
 from uuid import UUID
 from src.claimwise.utils.exceptions import ClaimNotFoundException
+from src.claimwise.features.claims.schema.claim import AssignAdjusterRequest
 
 
 router=APIRouter(tags=["Claims"])
@@ -58,13 +59,25 @@ def get_claim_details(claim_id: UUID, db: Session=Depends(get_db)):
 def view_all_claims(
     category: ClaimCategory|None=None,
     claim_status: ClaimStatus|None=None,
+    assigned_status: ClaimAssignmentStatus|None=None,
     sort_by_date: SortByCategory|None=None,
     db: Session=Depends(get_db)):
     try:
-        return claim_service.get_all_claims_service(category, claim_status, sort_by_date, db)
+        return claim_service.get_all_claims_service(category, claim_status, assigned_status, sort_by_date, db)
     except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
     
 @router.get("/claims/{claim_id}/submit")
 def submit_claim(claim_id: UUID, db:Session=Depends(get_db)):
-    return claim_service.submit_claim_service(claim_id, db)
+    try:
+        return claim_service.submit_claim_service(claim_id, db)
+    except ClaimNotFoundException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+    
+@router.patch("/claims/{claim_id}/assign")
+def assign_adjuster(claim_id, data: AssignAdjusterRequest, db:Session=Depends(get_db)):
+    
+
+    

@@ -250,11 +250,6 @@ def final_summarizer_agent_node(state: State):
         "final_assessment_result": json.loads(response.choices[0].message.content)
     }
 
-def save_assessment_result_node(state: State):
-    logger.info("Saving assessment result")
-
-    assessment_result_repository.create_assessment_result()
-
 
 builder=StateGraph(State)
 

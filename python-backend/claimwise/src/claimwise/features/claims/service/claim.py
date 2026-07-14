@@ -1,5 +1,6 @@
 from src.claimwise.features.claims.repository.claim import ClaimRepository
 from src.claimwise.features.claims.repository.attachment import AttachmentRepository
+from src.claimwise.features.claims.repository.assessment_result import AssessmentResultRepository
 import uuid
 from src.claimwise.utils.s3 import s3_client
 from src.claimwise.config.settings import settings
@@ -7,12 +8,14 @@ from src.claimwise.utils.logger import logger
 from src.claimwise.utils.exceptions import ClaimNotFoundException
 from src.claimwise.utils.assessment_panel.agent import graph
 from src.claimwise.utils.enum import ClaimStatus
+import json
 
 class ClaimService:
     
     def __init__(self):
         self.claim_repository=ClaimRepository()
         self.attachment_repository=AttachmentRepository()
+        self.assessment_result_repository=AssessmentResultRepository()
 
     def create_claim_service(self, category, title, description, date, estimated_cost, db):
         logger.info(f"Creating claim")
@@ -66,8 +69,8 @@ class ClaimService:
             "message": "Attachment uploaded successfully"
         }
     
-    def get_all_claims_service(self, category, status, sort_by_date, db):
-        return self.claim_repository.get_all_claims_repository(category, status, sort_by_date, db)
+    def get_all_claims_service(self, category, status, assigned_status, sort_by_date, db):
+        return self.claim_repository.get_all_claims_repository(category, status, assigned_status, sort_by_date, db)
     
     def get_claim_details_service(self, claim_id, db):
         logger.info(f"Fetching details for claim: {claim_id}")
@@ -100,9 +103,23 @@ class ClaimService:
         }
 
         result=graph.invoke(assessment_input)
+        self.assessment_result_repository.create_assessment_result(claim_id, json.dumps(result["final_assessment_result"]), db)
 
         self.claim_repository.update_claim_status_repository(claim_id, ClaimStatus.SUBMITTED, db)
+
+        logger.info("Claim assessed and submitted successfully")
         return result
+    
+    def assign_adjuster_service(self, claim_id, data, db):
+        logger.info(f"Assigning adjuster {data.adjuster_id} to claim: {claim_id}")
+
+        db_claim=self.claim_repository.get_claim_by_id_repository(claim_id, db)
+
+        if not db_claim:
+            raise ClaimNotFoundException("Claim not found")
+        
+        self.claim_repository.assign_adjuster_repository(claim_id, data.adjuster_id, db)
+        
         
         
 claim_service=ClaimService()

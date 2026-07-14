@@ -1,5 +1,5 @@
 from src.claimwise.models.claim import Claim
-from src.claimwise.utils.enum import SortByCategory, ClaimStatus
+from src.claimwise.utils.enum import SortByCategory, ClaimStatus, ClaimAssignmentStatus
 from sqlalchemy.orm import joinedload
 
 class ClaimRepository:
@@ -21,13 +21,18 @@ class ClaimRepository:
     def get_claim_by_id_repository(self, claim_id, db):
         return db.query(Claim).filter(Claim.id==claim_id).options(joinedload(Claim.attachments)).first()
     
-    def get_all_claims_repository(self, category, status, sort_by_date, db):
+    def get_all_claims_repository(self, category, status, assigned_status, sort_by_date, db):
         query = db.query(Claim)
 
         if category is not None:
             query=query.filter(Claim.category==category)
         if status is not None:
             query=query.filter(Claim).filter(Claim.status==status)
+        if assigned_status is not None:
+            if assigned_status==ClaimAssignmentStatus.ASSIGNED:
+                query=query.filter(Claim.assigned_to.is_not(None))
+            if assigned_status==ClaimAssignmentStatus.UNASSIGNED:
+                query=query.filter(Claim.assigned_to.is_(None))
         if sort_by_date is not None:
             if sort_by_date==SortByCategory.ASCENDING:
                 query=query.order_by(Claim.created_at.asc())
@@ -43,5 +48,11 @@ class ClaimRepository:
         db_claim=db.query(Claim).filter(Claim.id==claim_id).first()
 
         db_claim.status=status
+        db.commit()
+
+    def assign_adjuster_repository(self, claim_id, adjuster_id, db):
+        db_claim=db.query(Claim).filter(Claim.id==claim_id).first()
+
+        db_claim.assigned_to=adjuster_id
         db.commit()
         
