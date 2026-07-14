@@ -1,9 +1,10 @@
-import { baseApi } from "../../../services/baseapi";
+import { JavabaseApi } from "../../../services/java/Javabaseapi";
+import type { EmailRequest, VerifyOTPRequest } from "../types/auth.types";
 
-export const authApi = baseApi.injectEndpoints({
+export const authApi = JavabaseApi.injectEndpoints({
   endpoints: (builder) => ({
 
-    verifyemail: builder.mutation<void, {email:string}>({
+    verifyemail: builder.mutation<void, EmailRequest>({
       query: (body) => ({
         url: "", //integrate once i get api
         method: "POST",
@@ -11,11 +12,18 @@ export const authApi = baseApi.injectEndpoints({
       }),
     }),
 
-    verifyotp: builder.mutation<void, {otp:string}>({
+    verifyotp: builder.mutation<void, VerifyOTPRequest>({
       query: (body) => ({
         url: "", //integrate with api
         method: "POST",
         body,
+      }),
+    }),
+
+    refresh: builder.mutation<any, {refreshToken:string}>({
+      query: () => ({
+        url: "",
+        method:"GET"
       }),
     }),
 
@@ -25,8 +33,13 @@ export const authApi = baseApi.injectEndpoints({
         method:"GET"
       }),
     }),
+    
   }),
 });
 
 export const {
+  useMeQuery,
+  useVerifyemailMutation,
+  useVerifyotpMutation,
+  useRefreshMutation
 } = authApi;

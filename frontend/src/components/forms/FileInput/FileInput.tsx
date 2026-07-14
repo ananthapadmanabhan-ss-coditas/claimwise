@@ -1,6 +1,6 @@
 import { useId } from "react";
 import clsx from "clsx";
-import styles from "./FileUpload.module.scss";
+import styles from "./FileInput.module.scss";
 import type { FileUploadProps } from "./FileInput.types";
 
 const FileUpload = ({ id, className, ...props }: FileUploadProps) => {

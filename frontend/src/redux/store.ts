@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { baseApi } from "../services/baseapi";
+import { JavabaseApi } from "../services/java/Javabaseapi";
+import { PythonbaseApi } from "../services/python/Pythonbaseapi";
 
 export const store = configureStore({
     reducer:{
-        [baseApi.reducerPath]:baseApi.reducer,
+        [PythonbaseApi.reducerPath]:PythonbaseApi.reducer,
+        [JavabaseApi.reducerPath]:JavabaseApi.reducer
     },
     middleware:(getDefaultMiddleware)=>
-        getDefaultMiddleware().concat(baseApi.middleware),
+        getDefaultMiddleware().concat(PythonbaseApi.middleware).concat(JavabaseApi.middleware),
 });
