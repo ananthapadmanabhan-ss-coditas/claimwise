@@ -3,7 +3,7 @@ import clsx from "clsx";
 import styles from "./FileInput.module.scss";
 import type { FileUploadProps } from "./FileInput.types";
 
-const FileUpload = ({ id, className, ...props }: FileUploadProps) => {
+const FileInput = ({ id, className, ...props }: FileUploadProps) => {
   const generatedId = id ?? useId();
 
   return (
@@ -16,4 +16,4 @@ const FileUpload = ({ id, className, ...props }: FileUploadProps) => {
   );
 };
 
-export default FileUpload;
+export default FileInput;

@@ -4,6 +4,8 @@ import RouteGuard from "./RouteGuard";
 import GeneralLayout from "../layouts/GeneralLayout/GeneralLayout";
 import RoleRouter from "./RoleRouter";
 import ClaimantLayout from "../layouts/ClaimantLayout/ClaimantLayout";
+import ClaimantPortal from "../features/claimant/components/ClaimantPortal/ClaimantPortal";
+import ViewClaim from "../features/claimant/components/ViewClaimant/ViewClaim";
 
 export const routes=createBrowserRouter(
   [
@@ -37,7 +39,13 @@ export const routes=createBrowserRouter(
                   children:[
                     {
                       path:"/claimant/portal",
-                      // element:ClaimantPortal
+                      Component:ClaimantPortal,
+                      children:[
+                        {
+                          path:"/viewclaim/:id",
+                          Component:ViewClaim
+                        }
+                      ]
                     }
                   ]
                 }
