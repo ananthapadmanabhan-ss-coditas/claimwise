@@ -55,11 +55,11 @@ def get_claim_details(claim_id: UUID, db: Session=Depends(get_db)):
 @router.get("/claims")
 def view_all_claims(
     category: ClaimCategory|None=None,
-    status: ClaimStatus|None=None,
+    claim_status: ClaimStatus|None=None,
     sort_by_date: SortByCategory|None=None,
     db: Session=Depends(get_db)):
     try:
-        return claim_service.get_all_claims_service(category, status, sort_by_date, db)
+        return claim_service.get_all_claims_service(category, claim_status, sort_by_date, db)
     except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
     

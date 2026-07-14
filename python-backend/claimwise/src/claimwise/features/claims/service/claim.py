@@ -15,7 +15,7 @@ class ClaimService:
     def create_claim_service(self, category, description, date, estimated_cost, db):
         logger.info(f"Creating claim")
 
-        self.claim_repository.create_claim_repository(
+        db_claim=self.claim_repository.create_claim_repository(
             category,
             description,
             date,
@@ -27,6 +27,7 @@ class ClaimService:
 
         return {
             "message": "Claim created successfully",
+            "claim_id": db_claim.id
         }
     
     def upload_attachment_service(self, claim_id, file, db):
@@ -63,7 +64,7 @@ class ClaimService:
         }
     
     def get_all_claims_service(self, category, status, sort_by_date, db):
-        return self.claim_repository.get_all_claims_repository(self, category, status, sort_by_date, db)
+        return self.claim_repository.get_all_claims_repository(category, status, sort_by_date, db)
     
     def get_claim_details_service(self, claim_id, db):
         logger.info(f"Fetching details for claim: {claim_id}")
