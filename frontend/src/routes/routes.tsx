@@ -6,10 +6,10 @@ import RoleRouter from "./RoleRouter";
 import ClaimantLayout from "../layouts/ClaimantLayout/ClaimantLayout";
 import AdminLayout from "../layouts/AdminLayout/AdminLayout";
 import ViewUsersDashboard from "../pages/ViewUsersDashboard/ViewUsersDashboard";
-import ClaimantPortal from "../pages/ClaimantPortal/ClaimantPortal";
 import UnderDevelopment from "../components/feedback/UnderDevelopment/UnderDevelopment";
 import UnauthorizedPage from "../pages/Unauthorized/Unauthorized";
 import ViewClaim from "../features/claimant/components/ViewClaimant/ViewClaim";
+import ClaimentLanding from "../pages/ClaimentLanding/ClaimentLanding";
 
 export const routes=createBrowserRouter(
   [
@@ -42,7 +42,7 @@ export const routes=createBrowserRouter(
                 children: [
                   {
                     index: true,
-                    element: <ClaimantPortal />,
+                    element:<ClaimentLanding/>
                   },
                   {
                     path:"viewclaim/:id",

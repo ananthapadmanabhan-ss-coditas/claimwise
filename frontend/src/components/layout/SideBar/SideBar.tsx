@@ -8,7 +8,7 @@ const Sidebar = ({ items }: SidebarProps) => {
             <nav className={styles.navigation}>
                 {items.map((item) => (
                     <NavLink key={item.path}to={item.path}className={( {isActive} ) =>
-                            isActive? `${styles.link} ${styles.active}`: styles.link
+                            isActive? `${styles.active} ${styles.link} `: styles.link
                         }>
                         <span>{item.label}</span>
                     </NavLink>

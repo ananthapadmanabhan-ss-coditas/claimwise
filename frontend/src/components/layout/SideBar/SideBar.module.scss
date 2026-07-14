@@ -31,9 +31,11 @@
 }
 
 .active {
-    background-color: $primary-color;
+    background-color: red;
     color: white;
     &:hover{
         cursor: not-allowed;
+        background-color: $accent-color;
+        color: white;
     }
 }

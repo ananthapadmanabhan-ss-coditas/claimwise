@@ -1,7 +1,8 @@
 import { useState } from "react";
 
 import styles from "./ClaimantPortal.module.scss";
-import Button from "../../components/ui/Button/Button";
+import Button from "../../../../components/ui/Button/Button";
+import CreateClaimModal from "../CreateClaimModal/CreateClaimModal";
 
 const ClaimantPortal=()=>{
   const [createClaim,setCreateClaim]=useState(false)
@@ -16,7 +17,7 @@ const ClaimantPortal=()=>{
             <div className={styles.courseGrid}>
                 
             </div>
-      {/* {createClaim && <CreateClaimModal setModal={setCreateClaim}/>} */}
+      {createClaim && <CreateClaimModal setModal={setCreateClaim}/>}
     </section>
   );
 }

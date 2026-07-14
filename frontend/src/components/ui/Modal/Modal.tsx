@@ -18,7 +18,7 @@ const Modal = ({
   if (!isOpen || !root) return null;
 
   return createPortal(
-    <div className={styles.overlay} onClick={onClose}>
+    <div className={styles.overlay}>
       <div
         className={clsx(styles.content, className)}
       >
