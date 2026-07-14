@@ -63,3 +63,6 @@ def view_all_claims(
     except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
     
+@router.get("/claims/{claim_id}/submit")
+def submit_claim(claim_id: UUID, db:Session=Depends(get_db)):
+    return claim_service.submit_claim_service(claim_id, db)

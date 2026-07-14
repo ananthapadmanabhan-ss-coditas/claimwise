@@ -5,6 +5,7 @@ from src.claimwise.utils.s3 import s3_client
 from src.claimwise.config.settings import settings
 from src.claimwise.utils.logger import logger
 from src.claimwise.utils.exceptions import ClaimNotFoundException
+from src.claimwise.utils.assessment_panel.agent import graph
 
 class ClaimService:
     
@@ -75,6 +76,33 @@ class ClaimService:
         
         logger.info("Claim successfully fetched")
         return db_claim
+    
+    def submit_claim_service(self, claim_id, db):
+        logger.info(f"Carrying out intelligent assessment for claim: {claim_id}")
+
+        db_claim=self.claim_repository.get_claim_by_id_repository(claim_id, db)
+
+        if not db_claim:
+            raise ClaimNotFoundException("Claim not found")
+        
+        claim_attachments=db_claim.attachments
+
+        assessment_input={
+            "claim": {
+                "category": db_claim.category,
+                "description": db_claim.description,
+                "date": str(db_claim.date),
+                "estimated_cost": str(28000) 
+            },
+            "attachments": [attachment.file_name for attachment in claim_attachments]
+        }
+
+        result=graph.invoke(assessment_input)
+
+        return result
+        
+
+
         
 claim_service=ClaimService()
         

@@ -106,7 +106,7 @@ def completeness_agent_node(state: State):
 
 def cost_agent_node(state: State):
     with Session(engine) as db:
-        past_claims=claim_repository.get_claims_by_category_repository(state["category"], db)
+        past_claims=claim_repository.get_claims_by_category_repository(state["claim"]["category"], db)
 
     similar_past_claims=json.dumps([
         {
@@ -135,7 +135,7 @@ def cost_agent_node(state: State):
 
                 ##OUTPUT FORMAT
                 - cost_category: <REASONABLE/UNUSUALLY LOW/ UNUSUALLY HIGH>
-                - - explaination: "<explaination/reason of your cost assessment>"
+                - explaination: "<explaination/reason of your cost assessment>"
 
                 ##RULES
                 - Strictly return a JSON object
@@ -159,6 +159,78 @@ def cost_agent_node(state: State):
         "cost_result": json.loads(response.choices[0].message.content)
     }
 
+def consistency_agent_node(state: State):
+    claim=state["claim"]
+
+    response=client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role": "user",
+                "content": f"""
+                ##ROLE:
+                You are a consistency reviewer.
+
+                ##TASK
+                Checks the claim for internal consistency and potential red flags — for example, whether the description, the date, and the attached documents all line up, or whether something about the submission looks worth a closer look.
+
+                ##OUTPUT FORMAT
+                - is_consistent: <True/False>
+                - explaination: "<explaination/reason of your consistency assessment>"
+
+                ##RULES
+                - Strictly return a JSON object
+                - No code fences, markdown or explanations, return just a json object.
+                """
+            },
+            {
+                "role": "user",
+                "content": f"""
+                Claim:
+                {claim}
+                """
+            }
+        ]
+    )
+
+    return {
+        "consistency_result": json.loads(response.choices[0].message.content)
+    }
+
+def final_summarizer_agent_node(state: State):
+    response=client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role": "user",
+                "content": f"""
+                Summary:
+                {state["summary_result"]}
+
+                Completeness Review:
+                {state["completeness_result"]}
+
+                Cost Review
+                {state["cost_result"]}
+
+                Consistency
+                {state["consistency_result"]}
+
+                Produces one clear, consolidated assessment: a short summary of the claim, anything missing or inconsistent, 
+                and an overall suggestion of whether it looks straightforward to approve, needs more information, or needs closer manual scrutiny — always presented as a suggestion for the Adjuster to confirm, not a final decision.
+
+                ##OUTPUT FORMAT
+                Return response as plain string
+                """
+            }
+        ]
+    )
+
+    return {
+        "final_assessment_result": response.choices[0].message.content
+    }
+
+
 builder=StateGraph(State)
 
 builder.add_node(
@@ -179,6 +251,16 @@ builder.add_node(
 builder.add_node(
     "cost_agent",
     cost_agent_node
+)
+
+builder.add_node(
+    "consistency_agent",
+    consistency_agent_node
+)
+
+builder.add_node(
+    "final_summarizer_agent",
+    final_summarizer_agent_node
 )
 
 builder.add_edge(
@@ -202,25 +284,15 @@ builder.add_edge(
 )
 
 builder.add_edge(
-    ["summary_agent", "completeness_agent", "cost_agent"],
-    END
+    "load_claim",
+    "consistency_agent"
+)
+
+builder.add_edge(
+    ["summary_agent", "completeness_agent", "cost_agent", "consistency_agent"],
+    "final_summarizer_agent"
 )
 
 graph=builder.compile()
-
-result=graph.invoke({
-    "claim": {
-        "category": "ACCIDENT",
-        "description": "Met with a car accident on Pune-Mumbai Expressway. Accident happened when a truck collided with the car. Headlights broken and scratches on car. I wanted to claim my vehicle insurance. Police report and damage image is attached for reference.",
-        "date": "2026-07-14",
-        "estimated_cost": 28000 
-    },
-    "attachments": [
-        "police_report.png",
-        "damage.png"
-    ]
-})
-
-print(result)
 
 
