@@ -69,8 +69,8 @@ def submit_claim(claim_id: UUID, db:Session=Depends(get_db)):
         return claim_service.submit_claim_service(claim_id, db)
     except ClaimNotFoundException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
-    except Exception:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+    # except Exception:
+    #     raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
     
 @router.patch("/claims/{claim_id}/assign")
 def assign_adjuster(claim_id, data: AssignAdjusterRequest, db:Session=Depends(get_db)):
@@ -81,6 +81,18 @@ def assign_adjuster(claim_id, data: AssignAdjusterRequest, db:Session=Depends(ge
     except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
     
+# @router.get("/claims/{claim_id}/assessment-result")
+# def view_assessment_result(claim_id: UUID, db: Session=Depends(get_db)):
+
+    
 @router.patch("/claims/{claim_id}/approve")
 def approve_claim(claim_id: UUID, data: ApproveClaimRequest, db: Session=Depends(get_db)):
-    return claim_service.approve_claim_service(claim_id, data, db)
+    try:
+        return claim_service.approve_claim_service(claim_id, data, db)
+    except ClaimNotFoundException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error") 
+    
+# @router.patch("/claims/{claim_id}/reject")
+# def reject_claim()

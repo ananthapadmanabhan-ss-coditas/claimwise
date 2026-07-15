@@ -103,9 +103,11 @@ class ClaimService:
         }
 
         result=graph.invoke(assessment_input)
+        parsed_result=json.loads(result)
+        final_assessment_result=parsed_result["final_assessment_result"]
         self.assessment_result_repository.create_assessment_result(claim_id, json.dumps(result["final_assessment_result"]), db)
 
-        self.claim_repository.update_claim_status_repository(claim_id, ClaimStatus.SUBMITTED, db)
+        # self.claim_repository.update_claim_status_repository(claim_id, ClaimStatus.SUBMITTED, db)
 
         logger.info("Claim assessed and submitted successfully")
         return result
@@ -141,9 +143,22 @@ class ClaimService:
 
         # create payout and notify: dependency on other modules
 
+        logger.info("Claim status changed to APPROVED successfully")
         return {
-            "message": "Claim approved successfully"
+            "message": "Claim status changed to APPROVED successfully"
         }
+    
+    def view_assessment_result_service(self, claim_id, db):
+        logger.info(f"Fetching assessment result: {claim_id}")
+
+        db_claim=self.claim_repository.get_claim_by_id_repository(claim_id, db)
+
+        if not db_claim:
+            raise ClaimNotFoundException("Claim not found")
+        
+
+        
+
         
         
 claim_service=ClaimService()

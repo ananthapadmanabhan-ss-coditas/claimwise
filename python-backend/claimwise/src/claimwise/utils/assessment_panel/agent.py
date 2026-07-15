@@ -115,7 +115,7 @@ def cost_agent_node(state: State):
         {
             "description": past_claim.description,
             "category": past_claim.category,
-            "estimated_cost": past_claim.estimated_cost
+            "estimated_cost": str(past_claim.estimated_cost)
         }
 
         for past_claim in past_claims
@@ -218,9 +218,10 @@ def final_summarizer_agent_node(state: State):
                 Only use the provided data for the same.
 
                 ##OUTPUT FORMAT
-                - missing_fields: [<list of missing fields from the Completeness section and more information required if any>]
+                - missing_information: <missing information from the Completeness section and more information required if any>
                 - suggested_decision: <APPROVED/DENIED/REQUEST FOR MORE INFORMATION>
                 - explaination: <explaination/reason of the decision>
+                - confidence_score: <score out of 10 based on how sure you are of the decision you made based on the provided data>
 
                 ##RULES
                 - Strictly return a JSON object
