@@ -1,12 +1,12 @@
 import { PythonbaseApi } from "../../../services/python/Pythonbaseapi";
-import type { BaseClaimRequest,BaseClaimResponse,SubmitClaimRequest, UploadClaimRequest } from "../types/claim.types";
+import type { BaseClaimRequest,BaseClaimResponse,GetClaimsResponse,SubmitClaimRequest, UploadClaimRequest } from "../types/claim.types";
 
 export const authApi = PythonbaseApi.injectEndpoints({
   endpoints: (builder) => ({
 
-    getAllClaims: builder.query<any, void>({ //change ds according to data after recieving api
+    getAllClaims: builder.query<GetClaimsResponse[], void>({ 
       query: () => ({
-        url: "", //integrate once i get api
+        url: "/claims", 
         method: "GET",
       }),
     }),
@@ -30,7 +30,7 @@ export const authApi = PythonbaseApi.injectEndpoints({
     UploadClaim: builder.mutation<any, UploadClaimRequest>({
       query: () => ({
         url: "",
-        method:"GET"
+        method:"POST"
       }),
     }),
 

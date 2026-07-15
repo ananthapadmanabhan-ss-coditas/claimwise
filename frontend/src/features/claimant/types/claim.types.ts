@@ -1,8 +1,6 @@
-export type Category="AUTO"|"HOME"|"TRAVEL"|"ACCIDENT"
-
 export interface BaseClaimRequest{
   title:string;
-  category:Category;
+  category:string
   description:string;
   date:string;
   estimated_cost:string;
@@ -28,12 +26,15 @@ export interface GetClaimsResponse{
     "status": string,
     "updated_at": string|null,
     "user_id": string|null,
-    "category": Category,
+    "category": string,
     "date": string,
     "assigned_to": string|null,
     "created_at": string,
-    "deleted_at": string|null
+    "deleted_at": string|null,
+    title:string,
 }
+
+
 
 export interface ClaimByIdResponse extends GetClaimsResponse
 {

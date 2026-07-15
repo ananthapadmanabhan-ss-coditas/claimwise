@@ -22,6 +22,10 @@ export const routes=createBrowserRouter(
       Component:UnauthorizedPage
     },
     {
+      path:"underdevelopment",
+      Component:UnderDevelopment
+    },
+    {
     element: <RouteGuard/>,
     children: [
       {
