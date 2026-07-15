@@ -14,6 +14,7 @@ class ClaimCategory(str, Enum):
     HOME="HOME"
     TRAVEL="TRAVEL"
     ACCIDENT="ACCIDENT"
+    HEALTH="HEALTH"
 
 class SortByCategory(str, Enum):
     ASCENDING="ASCENDING"

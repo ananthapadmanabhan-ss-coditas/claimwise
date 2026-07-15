@@ -6,33 +6,29 @@ from datetime import date
 from src.claimwise.features.claims.service.claim import claim_service
 from uuid import UUID
 from src.claimwise.utils.exceptions import ClaimNotFoundException
-from src.claimwise.features.claims.schema.claim import AssignAdjusterRequest
+from src.claimwise.features.claims.schema.claim import AssignAdjusterRequest, ApproveClaimRequest, CreateClaimRequest
 
 
 router=APIRouter(tags=["Claims"])
 
-@router.post("/claims")
+@router.post("/claims", status_code=status.HTTP_201_CREATED)
 def file_claim(
-    category: ClaimCategory = Form(...),
-    title: str=Form(...),
-    description: str=Form(...),
-    date: date = Form(...),
-    estimated_cost: float = Form(...),
+    data: CreateClaimRequest,
     db: Session=Depends(get_db)
 ):
     try:
         return claim_service.create_claim_service(
-            category,
-            title,
-            description,
-            date,
-            estimated_cost,
+            data.category,
+            data.title,
+            data.description,
+            data.date,
+            data.estimated_cost,
             db
         )
     except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
     
-@router.post("/claims/{claim_id}/attachment")
+@router.post("/claims/{claim_id}/attachment", status_code=status.HTTP_201_CREATED)
 def upload_attachment(
     claim_id: UUID,
     file: UploadFile=File(...),
@@ -78,6 +74,13 @@ def submit_claim(claim_id: UUID, db:Session=Depends(get_db)):
     
 @router.patch("/claims/{claim_id}/assign")
 def assign_adjuster(claim_id, data: AssignAdjusterRequest, db:Session=Depends(get_db)):
+    try:
+        return claim_service.assign_adjuster_service(claim_id, data, db)
+    except ClaimNotFoundException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
     
-
-    
+@router.patch("/claims/{claim_id}/approve")
+def approve_claim(claim_id: UUID, data: ApproveClaimRequest, db: Session=Depends(get_db)):
+    return claim_service.approve_claim_service(claim_id, data, db)

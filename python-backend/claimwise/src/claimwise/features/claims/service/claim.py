@@ -118,8 +118,32 @@ class ClaimService:
         if not db_claim:
             raise ClaimNotFoundException("Claim not found")
         
-        self.claim_repository.assign_adjuster_repository(claim_id, data.adjuster_id, db)
+        # db_adjuster= dependency of java auth service
         
+        self.claim_repository.assign_adjuster_repository(claim_id, data.adjuster_id, db)
+        self.claim_repository.update_claim_status_repository(claim_id, ClaimStatus.UNDER_REVIEW, db)
+
+        logger.info(f"Adjuster {data.adjuster_id} assigned to claim {claim_id} successfully")
+
+        return {
+            "message": "Adjust assigned to claim successfully"
+        }  
+    
+    def approve_claim_service(self, claim_id, data, db):
+        logger.info(f"Approving claim: {claim_id}")
+
+        db_claim=self.claim_repository.get_claim_by_id_repository(claim_id, db)
+
+        if not db_claim:
+            raise ClaimNotFoundException("Claim not found")
+        
+        self.claim_repository.update_claim_status_repository(claim_id, ClaimStatus.APPROVED, db)
+
+        # create payout and notify: dependency on other modules
+
+        return {
+            "message": "Claim approved successfully"
+        }
         
         
 claim_service=ClaimService()
