@@ -5,10 +5,8 @@ import com.example.java_backend_claimwise.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,5 +30,10 @@ public class AuthController {
     public ResponseEntity<ApiResponse<AuthResponse>> refresh(@Valid @RequestBody RefreshDto dto){
         return ResponseEntity.ok(ApiResponse.success("Refresh Token fetched Successfully",authService.refresh(dto)));
     }
+//
+//    @GetMapping("/me")
+//    public ResponseEntity<ApiResponse<CreateUserDto>> getUser(@AuthenticationPrincipal Long userId){
+//        return ResponseEntity.ok(ApiResponse.success("User fetched successfully",authService.getUser(userId)));
+//    }
 }
 

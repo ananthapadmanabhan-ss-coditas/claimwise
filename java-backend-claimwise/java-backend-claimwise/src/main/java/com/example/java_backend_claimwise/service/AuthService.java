@@ -18,6 +18,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,9 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final JavaMailSender  mailSender;
 
+    @Value("${spring.mail.username}")
+    private String fromEmail;
+
     public void requestOtp(@Email @NotBlank(message = "Email cannot be blank") String email) {
         Users user = userRepo.findByEmail(email)
                 .orElseThrow(()-> new EmailNotFoundException("User with the email has not been found "));
@@ -50,6 +54,7 @@ public class AuthService {
                 .build());
 
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
         message.setTo(email);
         message.setSubject("Your ClaimWise login code");
         message.setText("Your OTP is " + code + ". It expires in 5 minutes.");
@@ -126,6 +131,7 @@ public class AuthService {
 
     private void sendWelcomeEmail(Users user) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(fromEmail);
         mailMessage.setTo(user.getEmail());
         mailMessage.setSubject("Welcome To ClaimWise");
         mailMessage.setText(
@@ -137,5 +143,12 @@ public class AuthService {
         mailSender.send(mailMessage);
 
     }
+
+//    public CreateUserDto getUser(Long userId) {
+//        Users user = userRepo.findById(userId)
+//                .orElseThrow(()-> new AppException("User not found"));
+//
+//
+//    }
 }
 

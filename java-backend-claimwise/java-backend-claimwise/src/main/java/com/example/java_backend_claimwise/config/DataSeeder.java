@@ -21,6 +21,8 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         seedUser("arya.gaikwad@coditas.com","Arya", Role.ADMIN, LocalDateTime.now());
+        seedUser("nikita.bachute@coditas.com","Nikita",Role.ADJUSTER, LocalDateTime.now());
+        seedUser("ananthapadmanabhan.s.s@coditas.com","Ananthapadmana",Role.CLAIMANT, LocalDateTime.now());
     }
 
     private void seedUser(String mail, String username, Role role, LocalDateTime now) {
