@@ -28,15 +28,16 @@ export const authApi = PythonbaseApi.injectEndpoints({
     }),
 
     UploadClaim: builder.mutation<any, UploadClaimRequest>({
-      query: () => ({
-        url: "",
-        method:"POST"
+      query: ({claim_id,...body}) => ({
+        url: `/claims/${claim_id}/attachment`,
+        method:"POST",
+        body
       }),
     }),
 
     SubmitClaim: builder.mutation<any, SubmitClaimRequest>({
-      query: () => ({
-        url: "",
+      query: ({claim_id}) => ({
+        url: `/claims/${claim_id}/submit`,
         method:"POST"
       }),
     }),

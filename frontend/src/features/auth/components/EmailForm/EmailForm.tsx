@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { EmailFormProp } from "./EmailForm.types";
 import { useVerifyemailMutation } from "../../services/authapi";
 import type { EmailRequest } from "../../types/auth.types";
-const EmailForm = ({form}:EmailFormProp) => {
+const EmailForm = ({form,setEmail}:EmailFormProp) => {
   
   const [verifyemail,{isLoading}] =useVerifyemailMutation()
 
@@ -19,6 +19,7 @@ const EmailForm = ({form}:EmailFormProp) => {
     //API CALLS
     try{
       await verifyemail(email)
+      setEmail(email.email)
       form("OTP")
     }
     catch(error){

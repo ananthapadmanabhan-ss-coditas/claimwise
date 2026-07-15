@@ -6,7 +6,7 @@ export const authApi = JavabaseApi.injectEndpoints({
 
     verifyemail: builder.mutation<void, EmailRequest>({
       query: (body) => ({
-        url: "", //integrate once i get api
+        url: "api/v1/auth/request-otp",
         method: "POST",
         body,
       }),
@@ -14,7 +14,7 @@ export const authApi = JavabaseApi.injectEndpoints({
 
     verifyotp: builder.mutation<void, VerifyOTPRequest>({
       query: (body) => ({
-        url: "", //integrate with api
+        url: "api/v1/auth/verify-otp",
         method: "POST",
         body,
       }),

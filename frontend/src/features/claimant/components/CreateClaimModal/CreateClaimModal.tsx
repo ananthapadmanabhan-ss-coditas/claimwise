@@ -10,7 +10,7 @@ import Select from "../../../../components/forms/Select/Select";
 import FileInput from "../../../../components/forms/FileInput/FileInput";
 import { claimschema, type ClaimFormData } from "../../schema/claimschema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useBaseClaimMutation } from "../../services/claimapi";
+import { useBaseClaimMutation, useUploadClaimMutation } from "../../services/claimapi";
 
 const CreateClaimModal = ({
   setModal,
@@ -18,6 +18,7 @@ const CreateClaimModal = ({
   setModal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [baseClaim,baseClaimState]=useBaseClaimMutation()
+  const [UploadClaim,UploadClaimState]=useUploadClaimMutation()
 
   const [btnstates,setBtnStates]=useState<"basic"|"upload"|"final">("basic")
 
@@ -40,16 +41,16 @@ const CreateClaimModal = ({
     }
   }
 
-  const handleFinalSubmit=async()=>{
+  const onUploadSubmit=async(Uploaddata:{file:File})=>{
     try{
-
+      await UploadClaim({claimId})
     }
     catch{
 
     }
   }
 
-  const onUploadSubmit=async()=>{
+   const handleFinalSubmit=async()=>{
     try{
 
     }
@@ -112,7 +113,7 @@ const CreateClaimModal = ({
           <FileInput multiple/>
         </FormField>
 
-        <Button type="submit" disabled={!baseClaimState.isSuccess}>
+        <Button type="submit" disabled={!baseClaimState.isSuccess }>
           Upload Attachments
         </Button>
 

@@ -12,7 +12,7 @@ const Header = () => {
                         src={logo}
                         alt="claimWISE Logo"
                     />
-                <h1>claim<span className={styles.W}>W</span>ise</h1>
+                <h1>claim<span>W</span>ise</h1>
             </div>
            
             <div className={styles.right}>

@@ -5,6 +5,7 @@ import OTPForm from "../OTPForm/OTPForm";
 
 const LoginForm = () => {
     const [form,setForm]=useState("email")
+    const [email,setEmail]=useState("")
     return (
         <section className={styles.authForm}>
             <div className={styles.header}>
@@ -13,8 +14,8 @@ const LoginForm = () => {
             </div>
 
             <div className={styles.body}>
-            {form==="email" && <EmailForm form={setForm}/>}
-            {form==="OTP" && <OTPForm/>}
+            {form==="email" && <EmailForm form={setForm} setEmail={setEmail}/>}
+            {form==="OTP" && <OTPForm email={email}/>}
             </div>
         </section>
     );

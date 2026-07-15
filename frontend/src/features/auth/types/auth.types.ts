@@ -3,13 +3,16 @@ export interface EmailRequest{
 }
 
 export interface EmailResponse{
-  //?? com back later once api is ready
+  message:string;
+  success:boolean;
+  data:string
 }
 
 export interface VerifyOTPRequest{
-  otp:string;
+  email:string
+  code:string;
 }
 
 export interface VerifyOTPResponse{
-  //??
+  
 }

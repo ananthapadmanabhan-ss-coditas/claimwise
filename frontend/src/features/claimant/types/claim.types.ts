@@ -12,11 +12,12 @@ export interface BaseClaimResponse{
 }
 
 export interface UploadClaimRequest{
+  claim_id:string;
   file:File
 }
 
 export interface SubmitClaimRequest{
-  
+  claim_id:string;
 }
 
 export interface GetClaimsResponse{
