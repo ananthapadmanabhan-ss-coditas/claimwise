@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { JavabaseApi } from "../services/java/Javabaseapi";
 import { PythonbaseApi } from "../services/python/Pythonbaseapi";
+import { JavabaseApi } from "../services/java/Javabaseapi";
 
 export const store = configureStore({
     reducer:{
