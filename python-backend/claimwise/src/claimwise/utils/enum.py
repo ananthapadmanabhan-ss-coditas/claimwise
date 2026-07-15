@@ -1,0 +1,27 @@
+from enum import Enum
+
+class ClaimStatus(str, Enum):
+    PENDING="PENDING"
+    PROCESSING="PROCESSING"
+    SUBMITTED="SUBMITTED"
+    UNDER_REVIEW="UNDER_REVIEW"
+    MORE_INFORMATION_REQUESTED="MORE_INFORMATION_REQUESTED"
+    APPROVED="APPROVED"
+    DENIED="DENIED"
+
+class ClaimCategory(str, Enum):
+    AUTO="AUTO"
+    HOME="HOME"
+    TRAVEL="TRAVEL"
+    ACCIDENT="ACCIDENT"
+    HEALTH="HEALTH"
+
+class SortByCategory(str, Enum):
+    ASCENDING="ASCENDING"
+    DESCENDING="DESCENDING"
+
+class ClaimAssignmentStatus(str, Enum):
+    ASSIGNED="ASSIGNED"
+    UNASSIGNED="UNASSIGNED"
+    
+

@@ -14,11 +14,19 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     REFRESH_TOKEN_EXPIRE_DAYS: int
 
+    S3_BUCKET_NAME: str
+    AWS_REGION_NAME: str
+    AWS_ACCESS_KEY_ID: str
+    AWS_SECRET_ACCESS_KEY: str
+
     class Config:
         env_file = ".env"
 
+    # def get_database_url(self):
+    #     return f"{self.DB_DIALECT}://{self.DB_USERNAME}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+
     def get_database_url(self):
-        return f"{self.DB_DIALECT}://{self.DB_USERNAME}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        return "postgresql://neondb_owner:npg_7PnBRV5Yaetg@ep-wispy-thunder-ahndmo7e-pooler.c-3.us-east-1.aws.neon.tech/claimwise_db?sslmode=require&channel_binding=require"
 
 
 settings = Settings()

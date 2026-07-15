@@ -2,3 +2,4 @@
 __pycache__/
 .*py[cod]
 .vscode
+api_key.txt
