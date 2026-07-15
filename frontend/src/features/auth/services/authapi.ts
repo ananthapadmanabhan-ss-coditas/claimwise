@@ -29,7 +29,7 @@ export const authApi = JavabaseApi.injectEndpoints({
 
     me: builder.query<any, void>({
       query: () => ({
-        url: "",
+        url: "auth/me",
         method:"GET"
       }),
     }),
