@@ -144,11 +144,10 @@ public class AuthService {
 
     }
 
-//    public CreateUserDto getUser(Long userId) {
-//        Users user = userRepo.findById(userId)
-//                .orElseThrow(()-> new AppException("User not found"));
-//
-//
-//    }
+    public Users getUser(Long userId) {
+        return userRepo.findById(userId)
+                .orElseThrow(()-> new AppException("User not found"));
+    }
+
 }
 
