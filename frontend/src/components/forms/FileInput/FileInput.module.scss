@@ -4,35 +4,14 @@
   width: 100%;
   padding: 0.5rem;
 
-  border: 1px solid $border-color;
+  border: thin solid ;
   border-radius: 8px;
-
   background-color: $input-bg;
   color: $text-primary;
 
   cursor: pointer;
 
-  &::file-selector-button {
-    margin-right: 1rem;
-    padding: 0.5rem 1rem;
-
-    border: none;
-    border-radius: 6px;
-
-    background-color: $primary-color;
-    color: white;
-
-    cursor: pointer;
-
-    transition: background-color 0.2s ease;
-  }
-
-  &::file-selector-button:hover {
-    background-color: $secondary-color;
-  }
-
   &:disabled {
-    opacity: 0.6;
     cursor: not-allowed;
   }
 }

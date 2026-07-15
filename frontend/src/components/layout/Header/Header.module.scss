@@ -14,12 +14,8 @@
     top: 0;
 }
 
-.left {
-    display: flex;
-    align-items: center;
-}
 
-.logo {
+.left {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -31,21 +27,23 @@
     }
 
     h1 {
-        color: $primary-active;
+        color: $accent-color;
+        span {
+            color: $primary-active;
+        }
     }
 }
 
-.right {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
+
 
 .userName {
     color: $text-secondary;
+    span{
+        color: $accent-color
+    }
 }
 
-.panel{
+.right{
     display: flex;
     align-items: center;
     gap: 0.75rem;

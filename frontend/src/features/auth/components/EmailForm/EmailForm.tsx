@@ -6,13 +6,25 @@ import styles from "./EmailForm.module.scss"
 import { emailSchema, type EmailFormData } from "../../schema/loginschema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { EmailFormProp } from "./EmailForm.types";
-const EmailForm = ({form}:EmailFormProp) => {
+import { useVerifyemailMutation } from "../../services/authapi";
+import type { EmailRequest } from "../../types/auth.types";
+const EmailForm = ({form,setEmail}:EmailFormProp) => {
+  
+  const [verifyemail,{isLoading}] =useVerifyemailMutation()
+
   const {register,handleSubmit,formState: { errors }} = useForm<EmailFormData>({
         resolver: zodResolver(emailSchema),
     });
-  const onSubmit=()=>{
+  const onSubmit=async(email:EmailRequest)=>{
     //API CALLS
-    form("OTP")
+    try{
+      await verifyemail(email)
+      setEmail(email.email)
+      form("OTP")
+    }
+    catch(error){
+      console.error(error)
+    }
   }
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -25,8 +37,8 @@ const EmailForm = ({form}:EmailFormProp) => {
         />
       </FormField>
 
-      <Button type="submit">
-        SEND OTP
+      <Button type="submit" disabled={isLoading}>
+        {isLoading ? "SENDING OTP" : "SEND OTP"}
       </Button>
 
     </form>
