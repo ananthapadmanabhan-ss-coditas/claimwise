@@ -103,14 +103,23 @@ class ClaimService:
         }
 
         result=graph.invoke(assessment_input)
-        parsed_result=json.loads(result)
-        final_assessment_result=parsed_result["final_assessment_result"]
-        self.assessment_result_repository.create_assessment_result(claim_id, json.dumps(result["final_assessment_result"]), db)
+        final_assessment_result=result["final_assessment_result"]
+        
+        self.assessment_result_repository.create_assessment_result_repository(
+            claim_id, 
+            final_assessment_result["summary"], 
+            final_assessment_result["missing_information"],
+            final_assessment_result["decision"],
+            final_assessment_result["decision_explanation"],
+            final_assessment_result["confidence_score"] ,
+            db)
 
-        # self.claim_repository.update_claim_status_repository(claim_id, ClaimStatus.SUBMITTED, db)
+        self.claim_repository.update_claim_status_repository(claim_id, ClaimStatus.SUBMITTED, db)
 
         logger.info("Claim assessed and submitted successfully")
-        return result
+        return {
+            "message": "Claim assessed and submitted successfully"
+        }
     
     def assign_adjuster_service(self, claim_id, data, db):
         logger.info(f"Assigning adjuster {data.adjuster_id} to claim: {claim_id}")
@@ -156,9 +165,8 @@ class ClaimService:
         if not db_claim:
             raise ClaimNotFoundException("Claim not found")
         
-
-        
-
+        logger.info(f"Assessment result fetched successfully")
+        return self.assessment_result_repository.get_assessment_result_by_claim_id_repository(claim_id, db)
         
         
 claim_service=ClaimService()
